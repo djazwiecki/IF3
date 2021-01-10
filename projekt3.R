@@ -86,7 +86,7 @@ quantile_plot <- function(lista, dane_historyczne = NULL, quantiles)
     napis <- c("dane historyczne", napis)
   }
   to_plot <- data.frame(dzien = rep(1:n, n1), cena = cena, grupa = rep(napis, times = rep(n, n1)))
-  plot <- ggplot(data=to_plot) + geom_line(aes(x=dzien, y=cena, colour = grupa)) + theme_wsj() + ggtitle("Kwantyle wysymulowanych trajektorii")
+  plot <- ggplot(data=to_plot) + geom_line(aes(x=dzien, y=cena, colour = grupa)) + theme_wsj() + ggtitle("Kwantyle GBM")
   return(plot)
 }
 # 
