@@ -284,8 +284,9 @@ bilans <- function(trajektoria,
     if(i+okres>n)
       okres = n-i
     S_T = trajektoria[i + okres]
-    kapital = (kapital - (delta - delta_old) * S) * exp(r * okres / n)
-    bilans = c(bilans, -100/trajektoria[1] * cena_call(S = S_T, t = (i + okres) * dt, K = K, r = r, sigma = zmiennosc_zlota, T = n * dt, czy_put = czy_put, D = dywidenda) + delta * S_T + kapital - dywidenda) # wartosc naszego portfela
+    kapital = (kapital - (delta - delta_old) * S) * exp(r * okres / n) + max(delta - delta_old, 0) * S * dywidenda * dt * okres
+    #kapital = (kapital - (delta - delta_old) * S) * exp(r * okres / n) - min(delta - delta_old, 0) * S * dywidenda * dt * okres
+    bilans = c(bilans, -100/trajektoria[1] * cena_call(S = S_T, t = (i + okres) * dt, K = K, r = r, sigma = zmiennosc_zlota, T = n * dt, czy_put = czy_put, D = dywidenda) + delta * S_T + kapital) # wartosc naszego portfela
     #tabelka <- tabelka %>% add_row(bilans=tail(bilans,1), cena_indeksu=S_T, delta=delta, kapital=kapital)
   }
   if(plot_bilans==F)
@@ -384,8 +385,8 @@ grid.arrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3)
 
 #K=0
 K = 0
-xmin = -0.7
-xmax = -0.4
+xmin = -0.63
+xmax = -0.14
 ymin = 0
 ymax = 160
 binwidth = 0.01
@@ -445,8 +446,8 @@ grid.arrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3)
 
 #K=0.5
 K = 0.5
-xmin = -0.7
-xmax = -0.4
+xmin = -0.63
+xmax = -0.14
 ymin = 0
 ymax = 160
 binwidth = 0.01
@@ -506,11 +507,11 @@ grid.arrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3)
 
 #K=1.5
 K = 1.5
-xmin = -0.04
-xmax = 0.1
+xmin = -0.015
+xmax = 0.012
 ymin = 0
-ymax = 140
-binwidth = 0.001
+ymax = 300
+binwidth = 0.0001
 
 
 okres <- 1
@@ -564,4 +565,61 @@ sum(dane< xmin | dane > xmax)
 grid.arrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3)
 
 
-#Dla K = 2 wychodzi 1 wartoœæ: -0.005374
+
+K = 2
+xmin = -1.2e-10
+xmax = 1.2e-10
+ymin = 0
+ymax = 200
+binwidth = 1e-12
+
+
+okres <- 1
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p1 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+okres <- 5
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p2 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+okres <- 10
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p3 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+okres <- 30
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p4 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+okres <- 60
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p5 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+okres <- 120
+dane = portfel(okres = okres,  dryf = parametry$dryf_roczny[2], zmiennosci = parametry$zmiennosc_roczna[-1], r = 0.01, S0 = S_0, zabezpieczenie =  0, czy_put = F, K = K, korelacja = parametry$korelacja, nazwa_aktywa = "GOLD")
+p6 <- plot_hist(dane, binwidth=binwidth, xmin=xmin, xmax = xmax, ymin=ymin, ymax=ymax) + theme(axis.title.x = element_blank()) + ggtitle(paste0("okres = ",okres," K = ",K))
+summary(dane)
+sd(dane)
+sum(dane< xmin | dane > xmax)
+
+
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3)
